@@ -76,7 +76,7 @@
 
       window.chatDiv = x;
 
-      if (x != undefined && x.children.length >= 1) {
+      if (x !== undefined && x.children.length >= 1) {
         x.children[0].innerHTML =
           '<div style="width: 340px; height: 100%; justify-content: center; display: flex; flex-direction: column; text-align: center; color: #999; user-select: none; background: #222;"></div>';
 
@@ -97,7 +97,7 @@
         retry = true;
       } else {
         x.addEventListener('mouseup', () => {
-          if (findChatDiv() && findChatDiv().clientWidth != 0) {
+          if (findChatDiv() && findChatDiv().clientWidth !== 0) {
             findRightCollapse().click();
           }
         });
@@ -177,8 +177,6 @@
       rect: { x: rect.x, y: rect.y, width: rect.width, height: rect.height },
     };
 
-    isCollapsed = rect.width == 0;
-
     try {
       chrome.runtime.sendMessage(data);
     } catch (err) {
@@ -237,7 +235,7 @@
 
   let path = location.pathname;
   setInterval(() => {
-    if (location.pathname != path) {
+    if (location.pathname !== path) {
       path = location.pathname;
 
       log('path changed');

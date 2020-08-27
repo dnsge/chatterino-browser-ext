@@ -17,7 +17,7 @@ let detachedWindowsCache = {};
 const debugCalls = true;
 
 let settings = (() => {
-  const map = { replaceTwitchChat: true };
+  const map = { updateWatchingChannel: true, replaceTwitchChat: true };
 
   // load settings
   chrome.storage.local.get(Object.keys(map), (result) => {
@@ -31,7 +31,7 @@ let settings = (() => {
 
   return {
     get: (key) => {
-      map[name]
+      return map[key];
     }, set: (key, value) => {
       let obj = {}
       obj[key] = value;
@@ -145,7 +145,7 @@ chrome.windows.onRemoved.addListener((windowId) => {
 // window selected
 chrome.windows.onFocusChanged.addListener((windowId) => {
   console.log(windowId);
-  if (windowId == -1) return;
+  if (windowId === -1) return;
 
   // this returns all tabs when the query fails
   chrome.tabs.query({ windowId: windowId, highlighted: true }, (tabs) => {
@@ -225,7 +225,7 @@ chrome.runtime.onMessage.addListener((message, sender, callback) => {
           };
 
           // attach to window
-          tryAttach(sender.tab.windowId, window.state == 'fullscreen', {
+          tryAttach(sender.tab.windowId, window.state === 'fullscreen', {
             name: matchChannelName(sender.tab.url),
             size: size,
           });
@@ -242,20 +242,29 @@ chrome.runtime.onMessage.addListener((message, sender, callback) => {
 
 // attach chatterino to a chrome window
 function tryAttach(windowId, fullscreen, data) {
-  if (!settings.all().replaceTwitchChat) {
+  if (!(settings.get('updateWatchingChannel') || settings.get('replaceTwitchChat'))) {
     return;
   }
+
+  let doReplace = settings.get('replaceTwitchChat');
 
   console.log('tryAttach ' + windowId);
 
   data.action = 'select';
-  if (fullscreen) {
-    data.attach_fullscreen = true;
+
+  if (doReplace) {
+    if (fullscreen) {
+      data.attach_fullscreen = true;
+    } else {
+      data.attach = true;
+    }
+    data.winId = '' + windowId;
+    attachedWindows[windowId] = {};
   } else {
-    data.attach = true;
+    data.attach = false;
   }
+
   data.type = 'twitch';
-  data.winId = '' + windowId;
   data.version = 0;
 
   let port = getPort();
@@ -263,8 +272,6 @@ function tryAttach(windowId, fullscreen, data) {
   if (port) {
     port.postMessage(data);
   }
-
-  attachedWindows[windowId] = {};
 }
 
 // detach chatterino from a chrome window
@@ -291,5 +298,5 @@ function tryDetach(windowId) {
 
 function updateBadge() {
   chrome.browserAction.setBadgeText(
-    { text: settings.all().replaceTwitchChat ? '' : 'off' });
+    { text: settings.get('updateWatchingChannel') ? '' : 'off' });
 }

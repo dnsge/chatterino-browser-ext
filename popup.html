@@ -10,21 +10,23 @@
 </head>
 
 <body>
-  <div>
-    <h3>Settings:</h3>
-    <label><input id="replace-twitch" type="checkbox">Replace twitch chat (page
-      reload required)</label>
+<div>
+  <h3>Settings (page reload required):</h3>
+  <label><input id="update-watching" type="checkbox">Set watching channel in Chatterino</label>
+  <br>
+  <label><input id="replace-twitch" type="checkbox">Replace twitch chat</label>
 
-    <h3>Troubleshooting:</h3>
-    <ul>
-      <li>Only Windows is supported!</li>
-      <li>Make sure <a href="https://chatterino.com">Chatterino</a> version
-        2.1.1 or later is installed and running on your computer.</li>
-      <li>Chatterino 1 is <u>not</u> supported.</li>
-      <li>There might be issues with other twitch related extensions.</li>
-    </ul>
-  </div>
-  <script src="popup.js"></script>
+  <h3>Troubleshooting:</h3>
+  <ul>
+    <li>Replacing chat is only supported on Windows!</li>
+    <li>Make sure <a href="https://chatterino.com">Chatterino</a> version
+      2.1.1 or later is installed and running on your computer.
+    </li>
+    <li>Chatterino 1 is <u>not</u> supported.</li>
+    <li>There might be issues with other twitch related extensions.</li>
+  </ul>
+</div>
+<script src="popup.js"></script>
 </body>
 
 </html>
